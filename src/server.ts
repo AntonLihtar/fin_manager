@@ -14,15 +14,19 @@ const logger = new Logger();
 const manager = new TransactionManager(repo, calculator, logger);
 
 // REST endpoint для добавления транзакции
-app.post('/transactions', (req, res) => {
+app.post('/transaction', (req, res) => {
     const { amount, type, description } = req.body;
 
     manager.addTransaction(amount, type, description);
 
     res.json({
         message: `Транзакция добавлена: ${description}`,
-        balance: manager.balance
     });
+});
+
+// REST endpoint для получения транзакций
+app.get('/transactions', (req, res) => {
+    res.json({ transactions: manager.getTransactions() });
 });
 
 // REST endpoint для получения баланса

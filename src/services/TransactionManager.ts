@@ -15,14 +15,16 @@ export class TransactionManager {
 
     addTransaction(amount: number, type: 'income' | 'expense', description: string): void {
         const transaction = new Transaction(amount, type, description);
-
         this.repository.add(transaction);
         this.logger.log(`Добавлена операция: ${description} (${amount})`);
-
         this.#balance = this.calculator.calculate(this.repository.getAll());
     }
 
     get balance(): number {
         return this.#balance
+    }
+
+    getTransactions(): Transaction[] {
+        return this.repository.getAll();
     }
 }

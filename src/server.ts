@@ -1,5 +1,3 @@
-'use strict'
-
 import express from 'express';
 import { TransactionRepository } from './services/TransactionRepository.js';
 import { BalanceCalculator } from './services/BalanceCalculator.js';

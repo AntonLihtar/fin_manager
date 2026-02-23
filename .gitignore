@@ -1,0 +1,27 @@
+# Node.js зависимости
+node_modules/
+
+# Логи
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Папки и файлы ОС
+.DS_Store
+Thumbs.db
+
+# Среды разработки
+.vscode/
+.idea/
+
+# Файлы сборки/транспиляции (если будут)
+dist/
+build/
+
+# База данных (если используешь SQLite локально)
+*.sqlite
+*.db
+
+# Кеши
+*.log

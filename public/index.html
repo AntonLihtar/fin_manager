@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Финансы</title>
+</head>
+<body>
+<h1>Добавить транзакцию</h1>
+<form id="transactionForm">
+    <input type="number" name="amount" placeholder="Сумма" required />
+    <select name="type">
+        <option value="income">Доход</option>
+        <option value="expense">Расход</option>
+    </select>
+    <input type="text" name="description" placeholder="Описание" required />
+    <button type="submit">Добавить</button>
+</form>
+
+<script>
+    document.getElementById('transactionForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const data = {
+            amount: Number(form.amount.value),
+            type: form.type.value,
+            description: form.description.value
+        };
+        const res = await fetch('/transaction', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        const json = await res.json();
+        alert(json.message);
+        form.reset();
+    });
+</script>
+</body>
+</html>

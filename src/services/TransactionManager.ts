@@ -1,23 +1,37 @@
 import {Transaction} from '../models/Transaction.js';
+import {Observer} from '../observers/Observer.js';
 import {TransactionRepository} from './TransactionRepository.js';
 import {BalanceCalculator} from './BalanceCalculator.js';
-import {Logger} from './Logger.js';
 
 export class TransactionManager {
     #balance = 0
+    #observers: Observer[] = []
 
     constructor(
         private repository: TransactionRepository,
         private calculator: BalanceCalculator,
-        private logger: Logger
     ) {
     }
 
-    addTransaction(amount: number, type: 'income' | 'expense', description: string): void {
+    addObserver(observer: Observer) {
+        this.#observers.push(observer)
+    }
+
+    private async notifyObservers(transaction: Transaction) {
+        await Promise.all(
+            this.#observers.map(obs =>
+                obs.notify(transaction)
+                    .catch(err => console.error('Observer failed:', err))
+            )
+        );
+    }
+
+    async addTransaction(amount: number, type: 'income' | 'expense', description: string): Promise<void> {
         const transaction = new Transaction(amount, type, description);
         this.repository.add(transaction);
-        this.logger.log(`Добавлена операция: ${description} (${amount})`);
         this.#balance = this.calculator.calculate(this.repository.getAll());
+
+        await this.notifyObservers(transaction);
     }
 
     get balance(): number {
